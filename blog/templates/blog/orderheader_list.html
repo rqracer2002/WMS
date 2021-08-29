@@ -1,0 +1,104 @@
+{% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
+
+
+
+{% block content %}
+
+
+
+  <div class="collapse mx-0 px-0" id="collapseExample" >
+    <form method="get" class="form-group mx-0 px-0">
+      <div class="row col-sm-10 mx-auto">
+        {% for field in filter.form %}
+          <div class="form-group col-sm-3 mx-0 px-0">
+            <!-- <label class="form-group col-sm-10" for="formGroupExampleInput">{{ field.label_tag }}</label> -->
+            <!-- <br> -->
+            {{ field }}
+          </div>
+
+        {% endfor %}
+      <input class="form-control-sm btn btn-primary mx-2" type="submit" value="Apply Filter"/>
+      <br>
+      <input class="form-control-sm btn btn-primary mx-2" type="button" onclick="location.href={% url 'orderheader_list' %};" value="Clear Filter" />
+
+      </form>
+      </div>
+
+
+
+
+
+
+    </form>
+
+  </div>
+  <div class="pagination d-flex justify-content-center">
+      <span class="step-links">
+          {% if page_obj.has_previous %}
+              <a href="?page=1">&laquo; first</a>
+              <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+          {% endif %}
+
+          <span class="current">
+              Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+          </span>
+
+          {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}">next</a>
+              <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+          {% endif %}
+
+      </span>
+  </div>
+
+  <table class="table table-striped mx-auto col-sm-8">
+    <tr class="mx-0 px-0">
+      <th class="mx-0 px-0">Order Number</th>
+      <th class="mx-0 px-0">Customer</th>
+      <th class="mx-0 px-0">Order Date</th>
+      <th class="mx-0 px-0">POD</th>
+      <th class="mx-0 px-0">Submit</th>
+    </tr>
+
+    {% for orderheader in object_list %}
+    <tr class="mx-0 px-0">
+        <td class="mx-0 px-0"><a href="{% url 'orderheader_detail' pk=orderheader.pk %}">{{ orderheader.ordnumber }}</a></td>
+        <td class="mx-0 px-0">{{ orderheader.customer }}</td>
+        <td class="mx-0 px-0"><a href="{% url 'orderheader_detail' pk=orderheader.pk %}">{{ orderheader.orderdate }}</a></td>
+
+
+        <td class="mx-0 px-0"><a href="{% url 'polls' pk=orderheader.pk %}">{{ orderheader.pod }}</a></td>
+
+        <td class="mx-0 px-0"><a href="{% url 'mymodelform' pk=orderheader.pk %}">{{ orderheader.submit }}</a></td>
+
+
+
+    </tr>
+    {% endfor %}
+  </table>
+
+  {%if orderheader.mymodel.count > 0 %}
+    <td><!-- additional buttons here --></td>
+  {% endif %}
+
+  <div class="pagination d-flex justify-content-center">
+      <span class="step-links">
+          {% if page_obj.has_previous %}
+              <a href="?page=1">&laquo; first</a>
+              <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+          {% endif %}
+
+          <span class="current">
+              Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+          </span>
+
+          {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}">next</a>
+              <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+          {% endif %}
+
+      </span>
+  </div>
+
+{% endblock %}

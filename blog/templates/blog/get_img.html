@@ -1,0 +1,18 @@
+
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<!-- {% load static %} -->
+<br>
+<div class="container">
+<a class="btn btn-primary download-button" href="/filedownload/{{ord_head_pk}}" role="button"}>Download</a>
+<br>
+<br>
+<img class="img-responsive col-12" src="{% static '/blog/' %}{{base_image}}" alt="home" />
+<!-- {{base_image}} -->
+<br>
+<br>
+
+<a class="btn btn-primary download-button" href="/filedownload/{{ord_head_pk}}" role="button"}>Download</a>
+</div>
+{% endblock %}
