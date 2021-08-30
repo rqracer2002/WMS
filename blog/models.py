@@ -1,6 +1,10 @@
 from django.db import models
 from django.utils import timezone
 from django.urls import reverse
+from PIL import Image
+from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
+import sys
 
 
 class Post(models.Model):
@@ -113,3 +117,22 @@ class MyModel(models.Model):
     # file will be uploaded to MEDIA_ROOT/uploads
     orderheader = models.ForeignKey('blog.OrderHeader', related_name='mymodel',on_delete=models.CASCADE,default=00000,null=True)
     upload = models.FileField(upload_to='media/')
+
+    def save(self):
+        # Opening the uploaded image
+        im = Image.open(self.upload)
+
+        output = BytesIO()
+
+        # Resize/modify the image
+        im = im.resize((1008,756))
+
+        # after modifications, save it to the output
+        im.save(output, format='JPEG', quality=100)
+        output.seek(0)
+
+        # change the imagefield value to be the newley modifed image value
+        self.upload = InMemoryUploadedFile(output, 'FileField', "%s.jpg" % self.upload.name.split('.')[0], 'image/jpeg',
+                                        sys.getsizeof(output), None)
+
+        super(MyModel, self).save()
