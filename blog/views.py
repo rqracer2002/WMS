@@ -222,20 +222,20 @@ class MyModelFormView(LoginRequiredMixin,FormView):
     template_name = "mymodel_form.html"
     success_url = '/about/'
 
-    # def post(self,request, *args, **kwargs):
-    #     print("HELLO")
-    #     form = MyModelForm(request.POST)
-    #     if myvalidator(self.kwargs.get('pk')) == "valid":
-    #         if form.is_valid():
-    #             form.save()
-    #             print(self.kwargs.get('pk')+"is the pk in post request")
-    #      # //return whatever you want to show on successful form submission
-    #         else:
-    #             print("do not save")
-    #     else:
-    #         print("This order already has a POD attached.")
-    #  # //return bound form as html with errors
-    #     return HttpResponseRedirect(reverse('orderheader_detail',args=[self.kwargs.get('pk')]))
+    def post(self,request, *args, **kwargs):
+        print("HELLO")
+        form = MyModelForm(request.POST)
+        if myvalidator(self.kwargs.get('pk')) == "valid":
+            if form.is_valid():
+                form.save()
+                print(self.kwargs.get('pk')+"is the pk in post request")
+         # //return whatever you want to show on successful form submission
+            else:
+                print("do not save")
+        else:
+            print("This order already has a POD attached.")
+     # //return bound form as html with errors
+        return HttpResponseRedirect(reverse('orderheader_detail',args=[self.kwargs.get('pk')]))
 
 
 

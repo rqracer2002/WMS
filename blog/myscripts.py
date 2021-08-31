@@ -4,7 +4,7 @@ import sqlite3
 def myname(orderheader):
 
         print("The POD is related to order header "+orderheader)
-        con = sqlite3.connect('C:\\Users\\Rafael\\Desktop\\WMS\\db.sqlite3')
+        con = sqlite3.connect('C:\\Users\\Rafael\\Projects\\WMS\\db.sqlite3')
 
         cur = con.cursor()
 
@@ -27,7 +27,7 @@ def myname(orderheader):
 def myvalidator(mymodel_id):
     mylist = []
     print("Validating if POD has been submitted already for order "+ mymodel_id)
-    con = sqlite3.connect('C:\\Users\\Rafael\\Desktop\\WMS\\db.sqlite3')
+    con = sqlite3.connect('C:\\Users\\Rafael\\Projects\\WMS\\db.sqlite3')
 
     cur = con.cursor()
 
