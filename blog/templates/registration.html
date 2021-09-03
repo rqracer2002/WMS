@@ -1,0 +1,20 @@
+{% extends "blog/base.html" %}
+{% load i18n %}
+
+{% block content %}
+  <h1>{% block title %}{% trans "Registration" %}{% endblock %}</h1>
+
+  <form action="" method="POST">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="fieldWrapper">
+        {{ field.errors }}
+        {{ field.label_tag }} {{ field }}
+        {% if field.help_text %}
+        <p class="help">{{ field.help_text|safe }}</p>
+        {% endif %}
+    </div>
+{% endfor %}
+    <button class="btn btn-primary" type="submit">{% trans "Register" %}</button>
+  </form>
+{% endblock %}

@@ -15,7 +15,7 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR,'blog/templates/blog')
-
+PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -36,13 +36,20 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'user_sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',
     'blog',
     'crispy_forms',
     'django_filters',
-    'sortable_listview',
+    'django_otp',
+    'django_otp.plugins.otp_static',
+    'django_otp.plugins.otp_totp',
+    'two_factor',
+
+    'debug_toolbar',
+    'bootstrapform'
 ]
 
 CRISPY_TEMPLATE_PACK = 'uni_form'
@@ -51,10 +58,15 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'user_sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_otp.middleware.OTPMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'two_factor.middleware.threadlocals.ThreadLocals',
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -134,3 +146,52 @@ LOGIN_REDIRECT_URL = '/'
 
 
 DEBUG = True
+
+LOGOUT_REDIRECT_URL = 'home'
+LOGIN_URL = 'two_factor:login'
+LOGIN_REDIRECT_URL = 'two_factor:profile'
+
+INTERNAL_IPS = ('127.0.0.1')
+
+# this one is optional
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'two_factor': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        }
+    }
+}
+
+TWO_FACTOR_CALL_GATEWAY = 'two_factor.gateways.twilio.gateway.Twilio'
+TWO_FACTOR_SMS_GATEWAY = 'two_factor.gateways.twilio.gateway.Twilio'
+PHONENUMBER_DEFAULT_REGION = 'NL'
+
+TWO_FACTOR_REMEMBER_COOKIE_AGE = 28800  # Set to 2 minute for testing
+
+SESSION_ENGINE = 'user_sessions.backends.db'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+SILENCED_SYSTEM_CHECKS = ['admin.E410']
+
+try:
+    from .settings_private import *  # noqa
+except ImportError:
+    pass
+
+TWILIO_ACCOUNT_SID='ACac8ae8d99b93c286db3111cf7e66cdf9'
+TWILIO_AUTH_TOKEN='c8c05e4a100f93cb7651083303daa8ac'
+TWILIO_CALLER_ID='+19893345934'
+
+TWO_FACTOR_LOGIN_TIMEOUT=600

@@ -23,6 +23,9 @@ from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
 from django.views import generic
 from sortable_listview import SortableListView
+from two_factor import urls
+from two_factor.views import OTPRequiredMixin
+from django_otp.decorators import otp_required
 
 
 
@@ -99,7 +102,7 @@ class OrderHeaderFilter(django_filters.FilterSet):
             # 'orderdate': ['lte','gte'],
         }
 
-class OrderHeaderListView(LoginRequiredMixin,SortableListView):
+class OrderHeaderListView(OTPRequiredMixin,LoginRequiredMixin,SortableListView):
     paginate_by = 150
     template_name = 'orderheader_list.html'
     model = OrderHeader
@@ -142,7 +145,7 @@ class OrderHeaderListView(LoginRequiredMixin,SortableListView):
 
 
 
-class OrderHeaderDetailView(LoginRequiredMixin,FormMixin,DetailView):
+class OrderHeaderDetailView(OTPRequiredMixin,LoginRequiredMixin,FormMixin,DetailView):
     model = OrderDetail
     form_class = OrderPickingForm
     login_url = '/login/'
@@ -196,7 +199,7 @@ class OrderHeaderDetailView(LoginRequiredMixin,FormMixin,DetailView):
         return context
 
 
-class OrderPickingDetailView(LoginRequiredMixin,FormMixin,DetailView):
+class OrderPickingDetailView(OTPRequiredMixin,LoginRequiredMixin,FormMixin,DetailView):
     model = OrderDetail
     form_class = OrderPickingForm
 
@@ -212,7 +215,7 @@ def upload_file(request):
     return render(request, 'upload.html', {'form': form})
 
 
-class MyModelFormView(LoginRequiredMixin,FormView):
+class MyModelFormView(OTPRequiredMixin,LoginRequiredMixin,FormView):
     # specify the Form you want to use
 
     form_class = MyModelForm
@@ -269,6 +272,7 @@ class MyModelFormView(LoginRequiredMixin,FormView):
      # //return bound form as html with errors
 
 @login_required
+@otp_required
 def get_img(request, pk):
     path = settings.MEDIA_ROOT
     mymodel = get_object_or_404(MyModel, orderheader_id=pk)
@@ -280,6 +284,7 @@ def get_img(request, pk):
     return render(request, 'get_img.html', content)
 
 @login_required
+@otp_required
 def FileDownloadView(request, pk):
     upload_object = get_object_or_404(MyModel, orderheader_id=pk)
     # upload_object = MyModel.objects.get(id=pk)
@@ -342,7 +347,9 @@ def comment_remove(request, pk):
     post_pk = comment.post.pk
     comment.delete()
     return redirect('post_detail', pk=post_pk)
+
 @login_required
+@otp_required
 def home_view(request):
 
 

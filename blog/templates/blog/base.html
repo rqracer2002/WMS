@@ -108,7 +108,7 @@ $('.collapse').collapse()
 
 
       <ul class="navbar-nav mr-auto">
-        <li><a class='nav-link' href="{% url 'orderheader_list' %}">OCW ORDERS</a></li>
+
 
 
         <!-- <li class="nav-link"><a href="{% url 'orderheader_list'%}">Orders</a></li> -->
@@ -117,6 +117,8 @@ $('.collapse').collapse()
         <li class="nav-link"><a href="https://www.linkedin.com">LinkedIn</a></li> -->
 
         {% if user.is_authenticated %}
+
+        <li><a class='nav-link' href="{% url 'orderheader_list' %}">OCW ORDERS</a></li>
         <!-- <li class="nav-link">
           <a href="{% url 'post_new' %}" >New Post</a>
         </li>
@@ -131,16 +133,21 @@ $('.collapse').collapse()
         <li class="nav-link">
           <a >Welcome: {{ user.username }}</a>
         </li>
+        <a class='nav-link' href="{% url 'two_factor:profile' %}" >Security</a>
         {% url 'orderheader_list' as orderheader_list_url %}
         {% url 'home' as home_url %}
         {% if orderheader_list_url in request.get_full_path %}
         <button class="btn btn-primary mx-2" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" role="button">
         Search
         </button>
+        <li class="nav-link">
+
+        </li>
 
         {% endif %}
           {% else %}
-          <li><a class='nav navbar-right' href="{% url 'login' %}" >Login</a></li>
+
+
         {% endif %}
 
       </ul>

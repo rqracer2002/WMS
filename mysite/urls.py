@@ -17,10 +17,64 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from django.contrib.auth import views
+from two_factor.urls import urlpatterns as tf_urls
+
+
+
+from django.conf import settings
+from django.contrib.auth.views import LogoutView
+from django.urls import path
+
+from two_factor.gateways.twilio.urls import urlpatterns as tf_twilio_urls
+
+from .views import (
+    ExampleSecretView, HomeView, RegistrationCompleteView, RegistrationView,
+)
+
+
+from django.contrib import admin
+from two_factor.admin import AdminSiteOTPRequired
+
+admin.site.__class__ = AdminSiteOTPRequired
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'', include('blog.urls')),
-    url(r'^accounts/login/$', views.LoginView.as_view(), name='login'),
-    url(r'^accounts/logout/$', views.LogoutView.as_view(), name='logout', kwargs={'next_page': '/'}),
+    # url(r'^account/login/$', views.LoginView.as_view(), name='login'),
+    url(r'^account/logout/$', views.LogoutView.as_view(), name='logout', kwargs={'next_page': '/'}),
+    path('', include(tf_urls)),
+    path(
+        '',
+        HomeView.as_view(),
+        name='home',
+    ),
+    path(
+        'account/logout/',
+        LogoutView.as_view(),
+        name='logout',
+    ),
+    path(
+        'secret/',
+        ExampleSecretView.as_view(),
+        name='secret',
+    ),
+    path(
+        'account/register/',
+        RegistrationView.as_view(),
+        name='registration',
+    ),
+    path(
+        'account/register/done/',
+        RegistrationCompleteView.as_view(),
+        name='registration_complete',
+    ),
+    path('', include(tf_twilio_urls)),
+    path('', include('user_sessions.urls', 'user_sessions')),
 ]
+
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ]
