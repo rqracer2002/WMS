@@ -1,5 +1,6 @@
 TWO_FACTOR_SMS_GATEWAY = 'two_factor.gateways.twilio.gateway.Twilio'
 TWO_FACTOR_CALL_GATEWAY = 'two_factor.gateways.twilio.gateway.Twilio'
 TWILIO_ACCOUNT_SID = 'ACac8ae8d99b93c286db3111cf7e66cdf9'
-TWILIO_AUTH_TOKEN = 'c8c05e4a100f93cb7651083303daa8ac'
+
+TWILIO_AUTH_TOKEN = '97ad527dcbca6fa468593c64c08553ba'
 TWILIO_CALLER_ID = '+19893345934'

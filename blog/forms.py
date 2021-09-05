@@ -6,6 +6,22 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit
 from .myscripts import myvalidator
 
+from import_export.forms import ConfirmImportForm, ImportForm
+
+# class AuthorFormMixin(forms.Form):
+#     author = forms.ModelChoiceField(queryset=Author.objects.all(),
+#                                     required=True)
+#
+#
+# class CustomImportForm(AuthorFormMixin, ImportForm):
+#     """Customized ImportForm, with author field required"""
+#     pass
+#
+#
+# class CustomConfirmImportForm(AuthorFormMixin, ConfirmImportForm):
+#     """Customized ConfirmImportForm, with author field required"""
+#     pass
+
 
 class PostForm(forms.ModelForm):
 

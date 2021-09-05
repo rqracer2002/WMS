@@ -2,7 +2,7 @@ import os
 from django.shortcuts import render, get_object_or_404, redirect
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from blog.models import Post, Comment, OrderHeader,OrderDetail,BinTransfer,MyModel
+from blog.models import Post, Comment, OrderHeader,OrderDetail,BinTransfer,MyModel,CustomUser
 from django.utils import timezone
 from blog.forms import PostForm, CommentForm, OrderPickingForm,UploadFileForm,MyModelForm
 from django.views.generic.edit import FormMixin
@@ -26,6 +26,9 @@ from sortable_listview import SortableListView
 from two_factor import urls
 from two_factor.views import OTPRequiredMixin
 from django_otp.decorators import otp_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.models import User
 
 
 
@@ -94,6 +97,7 @@ class OrderHeaderFilter(django_filters.FilterSet):
             'placeholder': 'Min Order Date', 'class': 'form-control-sm'}))
     min_orderdate = django_filters.NumberFilter(field_name="orderdate",lookup_expr='lte',label="Date LTE",widget=forms.TextInput(attrs={
             'placeholder': 'Max Order Date', 'class': 'form-control-sm'}))
+
     # orderdate__gt = django_filters.NumberFilter(lookup_expr='gt',label="Date GTE")
     class Meta:
         model = OrderHeader
@@ -103,6 +107,7 @@ class OrderHeaderFilter(django_filters.FilterSet):
         }
 
 class OrderHeaderListView(OTPRequiredMixin,LoginRequiredMixin,SortableListView):
+
     paginate_by = 150
     template_name = 'orderheader_list.html'
     model = OrderHeader
@@ -136,20 +141,40 @@ class OrderHeaderListView(OTPRequiredMixin,LoginRequiredMixin,SortableListView):
     #     print(type(int(orderheaderid[2])))
     #     return super(OrderHeaderDetailView, self).dispatch(request, *args, **kwargs)
 
+
     def get_queryset(self):
-        queryset = super().get_queryset()
-        descending = OrderHeaderFilter(self.request.GET, queryset=queryset).qs
-        return descending.order_by('-orderdate')
+        # print(User.username)
+        user = User.objects.get(username=self.request.user)
+        # print(user)
+        # user = User.objects.get(User.username)
+
+        if user.groups.filter(name='accounting').exists():
+
+
+            queryset = super().get_queryset()
+            descending = OrderHeaderFilter(self.request.GET, queryset=queryset).qs
+            return descending.order_by('-orderdate')
+
+        else:
+            queryset = super().get_queryset()
+            descending = OrderHeaderFilter(self.request.GET, queryset=queryset).qs
+            return descending.filter(customer=user.customuser.customer).order_by('-orderdate')
         # return OrderHeader.objects.filter(orderdate__lte=20210831).order_by('-orderdate')
 
 
 
 
-class OrderHeaderDetailView(OTPRequiredMixin,LoginRequiredMixin,FormMixin,DetailView):
+
+# @permission_required('user.can_delete', login_url='/')
+class OrderHeaderDetailView(UserPassesTestMixin,OTPRequiredMixin,LoginRequiredMixin,FormMixin,DetailView):
     model = OrderDetail
     form_class = OrderPickingForm
     login_url = '/login/'
     redirect_field_name = 'blog/orderheader_detail.html'
+
+    def test_func(self):
+        return self.request.user.username.endswith('rafael')
+
 
 
     def dispatch(self, request, *args, **kwargs):

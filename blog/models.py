@@ -5,6 +5,37 @@ from PIL import Image
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import sys
+from django.contrib import admin
+from django.contrib.auth.models import User
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
+# from django.conf import settings
+
+from django.contrib.auth.models import AbstractUser
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth.base_user import BaseUserManager
+
+
+class CustomUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    customer = models.CharField(max_length=100)
+    REQUIRED_FIELDS = []
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class Post(models.Model):
@@ -55,6 +86,9 @@ class OrderHeader(models.Model):
     expirydate = models.DecimalField(max_digits=9, decimal_places=0)
     pod = models.CharField(max_length=10,default = '',blank = True)
     submit = models.CharField(max_length=10,default = 'Submit',blank = True)
+
+    def __str__(self):
+        return self.customer+" "+self.ordnumber
 
 
     # def commitquantity(self):
@@ -118,6 +152,12 @@ class MyModel(models.Model):
     orderheader = models.ForeignKey('blog.OrderHeader', related_name='mymodel',on_delete=models.CASCADE,default=00000,null=True)
     upload = models.FileField(upload_to='media/')
 
+    class meta:
+        permissions = (
+        ("can_add_data","can add a new data"),
+        )
+
+
     def save(self):
         # Opening the uploaded image
         im = Image.open(self.upload)
@@ -136,3 +176,17 @@ class MyModel(models.Model):
                                         sys.getsizeof(output), None)
 
         super(MyModel, self).save()
+
+# ct = ContentType.objects.get_for_model(MyModel)
+# permission1 = Permission.objects.create(
+# codename='can_view_MyModel',
+# name='View MyModel',
+# content_type=ct,)
+
+
+# class UsersAdmin(admin.ModelAdmin):
+#     rafael = User.objects.get(username='rafael')
+#
+#     rafael.user_permissions.add(1)
+#
+#     rafael.save()

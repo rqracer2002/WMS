@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR,'blog/templates/blog')
@@ -47,6 +48,8 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',
     'two_factor',
+    'import_export',
+    # 'core',
 
     'debug_toolbar',
     'bootstrapform'
@@ -191,7 +194,9 @@ except ImportError:
     pass
 
 TWILIO_ACCOUNT_SID='ACac8ae8d99b93c286db3111cf7e66cdf9'
-TWILIO_AUTH_TOKEN='c8c05e4a100f93cb7651083303daa8ac'
+TWILIO_AUTH_TOKEN='97ad527dcbca6fa468593c64c08553ba'
 TWILIO_CALLER_ID='+19893345934'
 
 TWO_FACTOR_LOGIN_TIMEOUT=600
+
+# AUTH_USER_MODEL = 'blog.CustomUser'
