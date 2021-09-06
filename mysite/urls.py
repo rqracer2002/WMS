@@ -23,7 +23,7 @@ from two_factor.urls import urlpatterns as tf_urls
 
 from django.conf import settings
 from django.contrib.auth.views import LogoutView
-from django.urls import path
+from django.urls import path, include
 
 from two_factor.gateways.twilio.urls import urlpatterns as tf_twilio_urls
 
@@ -35,9 +35,39 @@ from .views import (
 from django.contrib import admin
 from two_factor.admin import AdminSiteOTPRequired
 
+from django.contrib.auth.models import User
+from rest_framework import routers, serializers, viewsets
+
+from rest_framework import mixins
+from rest_framework import routers
+
+
+
 admin.site.__class__ = AdminSiteOTPRequired
 
+# Serializers define the API representation.
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = ['url', 'username', 'email', 'is_staff']
+
+# ViewSets define the view behavior.
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+# Routers provide an easy way of automatically determining the URL conf.
+router = routers.DefaultRouter()
+router.register(r'users', UserViewSet)
+
+
+# Wire up our API using automatic URL routing.
+# Additionally, we include login URLs for the browsable API.
+
+
 urlpatterns = [
+    path('', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^admin/', admin.site.urls),
     url(r'', include('blog.urls')),
     # url(r'^account/login/$', views.LoginView.as_view(), name='login'),
@@ -70,6 +100,12 @@ urlpatterns = [
     ),
     path('', include(tf_twilio_urls)),
     path('', include('user_sessions.urls', 'user_sessions')),
+]
+
+from rest_framework.authtoken import views
+
+urlpatterns += [
+    path('api-token-auth/', views.obtain_auth_token)
 ]
 
 

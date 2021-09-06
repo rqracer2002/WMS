@@ -52,8 +52,16 @@ INSTALLED_APPS = [
     # 'core',
 
     'debug_toolbar',
-    'bootstrapform'
+    'bootstrapform',
+    'rest_framework',
+    'rest_framework.authtoken'
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
 
 CRISPY_TEMPLATE_PACK = 'uni_form'
 
