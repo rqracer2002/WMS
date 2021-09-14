@@ -190,3 +190,16 @@ class MyModel(models.Model):
 #     rafael.user_permissions.add(1)
 #
 #     rafael.save()
+
+class AdjustmentLine(models.Model):
+    reserved_sku = models.CharField(max_length=30,default = '',blank = True)
+    reserved_desc = models.CharField(max_length=30,default = '',blank = True)
+    reserved_quant = models.CharField(max_length=9)
+    optima_sku = models.CharField(max_length=30,default = '',blank = True)
+    optima_desc = models.CharField(max_length=30,default = '',blank = True)
+    optima_quant = models.DecimalField(max_digits=9, decimal_places=0)
+    in_transit_quant = models.DecimalField(max_digits=9, decimal_places=0)
+    transfer_quant = models.DecimalField(max_digits=9, decimal_places=0,blank = True)
+
+    def __str__(self):
+        return self.reserved_sku+"-&-"+self.optima_sku

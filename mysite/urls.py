@@ -40,6 +40,9 @@ from rest_framework import routers, serializers, viewsets
 
 from rest_framework import mixins
 from rest_framework import routers
+from blog.serializers import UserSerializer,OrderHeaderSerializer
+from blog.views import UserViewSet,OrderHeaderViewSet
+from blog.models import OrderHeader,AdjustmentLine
 
 
 
@@ -56,9 +59,31 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+class OrderHeaderSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = OrderHeader
+        fields = ['url', 'orduniq', 'ordnumber', 'customer','orderdate','expirydate','pod']
+
+# ViewSets define the view behavior.
+class OrderHeaderViewSet(viewsets.ModelViewSet):
+    queryset = OrderHeader.objects.all()
+    serializer_class = OrderHeaderSerializer
+
+class AdjustmentLineSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = AdjustmentLine
+        fields = ['reserved_sku', 'reserved_desc', 'reserved_quant','optima_sku', 'optima_desc', 'optima_quant','in_transit_quant','transfer_quant']
+
+# ViewSets define the view behavior.
+class AdjustmentLineViewSet(viewsets.ModelViewSet):
+    queryset = AdjustmentLine.objects.all()
+    serializer_class = AdjustmentLineSerializer
+
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
+router.register(r'orderheaders', OrderHeaderViewSet)
+router.register(r'adjustmentline', AdjustmentLineViewSet)
 
 
 # Wire up our API using automatic URL routing.

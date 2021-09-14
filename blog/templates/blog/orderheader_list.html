@@ -1,5 +1,6 @@
 {% extends 'blog/base.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 
 
@@ -100,5 +101,45 @@
 
       </span>
   </div>
+<div id="example-table"></div>
+<script>
+  //create Tabulator on DOM element with id "example-table"
+  var table = new Tabulator("#example-table", {
+      height:false,
+      layout:"fitDataTable", // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
+      // layout:"fitColumns", //fit columns to width of table (optional)
+      columns:[ //Define Table Columns
+      {title:"Reserved SKU", field:"reserved_sku", width:150},
+      {title:"Reserved Desc", field:"reserved_desc", align:"left"},
+      {title:"Reserved Quant", field:"reserved_quant"},
+      {title:"Optima SKU", field:"optima_sku", width:150},
+      {title:"Optima Desc", field:"optima_desc", align:"left"},
+      {title:"Optima Quant", field:"optima_quant"},
+      {title:"In Transit Quant", field:"in_transit_quant"},
+      {title:"Transfer Quant", field:"transfer_quant",editor:"input"},
+
+    ],
+    cellEdited:function(cell){ //trigger an alert message when the row is clicked
+      const rowObj = cell.getRow();
+      const cellArray = rowObj.getCells();
+
+      for (let i = 0; i < cellArray.length; i++) {
+          console.log(cellArray[i].getColumn().getDefinition().title+" "+cellArray[i].getValue());
+          console.log(cellArray[i])
+      }
+    },
+  });
+  // var tabledata = "{% static 'test.json' %}";
+
+  //load sample data into the table
+  // table.setData("http://192.168.1.154:8000/adjustmentline/");
+  // console.log("http://192.168.1.154:8000/adjustmentline/");
+
+  fetch("http://192.168.1.154:8000/adjustmentline/")
+  .then(res => res.json()) // the .json() method parses the JSON response into a JS object literal
+  .then(data => table.setData(data.results));
+</script>
+
+
 
 {% endblock %}

@@ -3,7 +3,7 @@ from django.contrib import admin
 from import_export.admin import ExportActionModelAdmin, ImportExportMixin, ImportMixin
 from import_export.resources import ModelResource
 
-from .models import Post, Comment, OrderHeader, OrderDetail,BinTransfer,MyModel,CustomUser
+from .models import Post, Comment, OrderHeader, OrderDetail,BinTransfer,MyModel,CustomUser,AdjustmentLine
 
 from import_export import resources
 from import_export.admin import ImportExportActionModelAdmin
@@ -61,3 +61,4 @@ admin.site.register(CustomUser)
 admin.site.register(OrderDetail)
 admin.site.register(BinTransfer)
 admin.site.register(MyModel)
+admin.site.register(AdjustmentLine)

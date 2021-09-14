@@ -58,6 +58,8 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 100,
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ]
@@ -150,7 +152,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'blog')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'blog/static/blog')
 
 LOGIN_REDIRECT_URL = '/'
@@ -202,7 +204,7 @@ except ImportError:
     pass
 
 TWILIO_ACCOUNT_SID='ACac8ae8d99b93c286db3111cf7e66cdf9'
-TWILIO_AUTH_TOKEN='97ad527dcbca6fa468593c64c08553ba'
+TWILIO_AUTH_TOKEN='014b94aeab06134ddd630d22c3573122'
 TWILIO_CALLER_ID='+19893345934'
 
 TWO_FACTOR_LOGIN_TIMEOUT=600
