@@ -2,7 +2,7 @@ import os
 from django.shortcuts import render, get_object_or_404, redirect
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from blog.models import Post, Comment, OrderHeader,OrderDetail,BinTransfer,MyModel,CustomUser
+from blog.models import Post, Comment, OrderHeader,OrderDetail,BinTransfer,MyModel,CustomUser,AdjustmentLine
 from django.utils import timezone
 from blog.forms import PostForm, CommentForm, OrderPickingForm,UploadFileForm,MyModelForm
 from django.views.generic.edit import FormMixin
@@ -337,6 +337,15 @@ class MyModelFormView(OTPRequiredMixin,LoginRequiredMixin,FormView):
             print("This order already has a POD attached.")
             return HttpResponseRedirect(reverse('orderheader_list'))
      # //return bound form as html with errors
+
+class BuildAdjustmentPageView(LoginRequiredMixin,TemplateView):
+
+    template_name = "buildadjustment.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['adjustment_line'] = AdjustmentLine.objects.all()
+        return context
 
 @login_required
 @otp_required

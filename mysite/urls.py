@@ -72,7 +72,7 @@ class OrderHeaderViewSet(viewsets.ModelViewSet):
 class AdjustmentLineSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = AdjustmentLine
-        fields = ['reserved_sku', 'reserved_desc', 'reserved_quant','optima_sku', 'optima_desc', 'optima_quant','in_transit_quant','transfer_quant']
+        fields = ['id','reserved_sku', 'reserved_desc', 'reserved_quant','optima_sku', 'optima_desc', 'optima_quant','in_transit_quant','transfer_quant']
 
 # ViewSets define the view behavior.
 class AdjustmentLineViewSet(viewsets.ModelViewSet):

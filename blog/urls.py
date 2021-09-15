@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^comment/(?P<pk>\d+)/approve/$', views.comment_approve, name='comment_approve'),
     url(r'^comment/(?P<pk>\d+)/remove/$', views.comment_remove, name='comment_remove'),
     url(r'^filedownload/(?P<pk>\d+)$', views.FileDownloadView, name='file_download'),
+    url(r'^buildadjustment/$', views.BuildAdjustmentPageView.as_view(), name='adjustment_line'),
 ]
 
 urlpatterns+=staticfiles_urlpatterns()
